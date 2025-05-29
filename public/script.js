@@ -12,25 +12,27 @@ function parseChordPro(text) {
     lines.forEach(line => {
         if (line.startsWith("{start_of_tab}")) {
             insideTab = true;
-            parsedHtml += `<div class="tab-section">`;
+            parsedHtml += `<div class="verse-container"><div></div><div class="tab-section">`;
         } else if (line.startsWith("{end_of_tab}")) {
             insideTab = false;
-            parsedHtml += `</div>`;
+            parsedHtml += `</div></div>`;
         } else if (line.startsWith("{start_of_chorus}")) {
             insideChorus = true;
             chorusBuffer = `<blockquote class="chorus">`;
         } else if (line.startsWith("{end_of_chorus}")) {
             insideChorus = false;
             chorusBuffer += `</blockquote>`;
-            parsedHtml += chorusBuffer;
+            parsedHtml += `<div class="verse-container"><div></div><div class="verse-content">${chorusBuffer}</div></div>`;
             chorusBuffer = "";
         } else if (line.startsWith("{start_of_verse:")) {
             insideVerse = true;
             verseLabel = line.replace("{start_of_verse:", "").replace("}", "").trim();
-            verseBuffer = `<div class="verse"><h3 class="verse-label">${verseLabel}</h3>`;
+            verseBuffer = `<div class="verse-container">
+                              <div class="verse-label">${verseLabel}</div>
+                              <div class="verse-content">`;
         } else if (line.startsWith("{end_of_verse}")) {
             insideVerse = false;
-            verseBuffer += `</div>`;
+            verseBuffer += `</div></div>`;
             parsedHtml += verseBuffer;
             verseBuffer = "";
         } else if (insideTab) {
@@ -51,13 +53,12 @@ function parseChordPro(text) {
             for (let i = 0; i < line.length; i++) {
                 if (line[i] === "[" && line.indexOf("]", i) !== -2) {
                     let chord = line.substring(i + 1, line.indexOf("]", i));
-                    chordBuffer = chordCount === 0 ? chord : chord.trimStart(); // Prevent extra space after first chord
+                    chordBuffer = chordCount === 0 ? chord : chord.trimStart();
                     chordCount++;
                     i = line.indexOf("]", i);
                 } else {
                     lyricsLine += line[i];
                     padCount++;
-                    console.log(chordLine + ":" + chordCount + ":" + padCount);
                     chordLine += chordBuffer 
                         ? chordBuffer.padEnd(chordBuffer.length, " ") 
                         : (chordCount == 1 && padCount == 2 && insideChorus) ? "" : " ";
@@ -65,8 +66,8 @@ function parseChordPro(text) {
                 }
             }
 
-            chordLine = `<div class='chord-line' style='padding-bottom: 5px;'>${chordLine}</div>`;
-            lyricsLine = `<div class='lyrics-line' style='padding-top: 5px;'>${lyricsLine}</div>`;
+            chordLine = `<div class='chord-line'>${chordLine}</div>`;
+            lyricsLine = `<div class='lyrics-line'>${lyricsLine}</div>`;
 
             if (insideChorus) {
                 chorusBuffer += chordLine + lyricsLine;

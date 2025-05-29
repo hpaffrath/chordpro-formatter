@@ -1,21 +1,27 @@
+/* General Formatting */
 body {
     font-family: "Fira Mono", monospace;
+    line-height: 1.6;
+    margin: 20px;
+    padding: 0;
 }
 
+/* Title & Subtitle Styling */
 .title {
-    font-size: 40px;  /* Enlarged Title */
+    font-size: 40px;
     font-weight: bold;
     text-align: center;
     margin-bottom: 10px;
 }
 
 .subtitle {
-    font-size: 30px;  /* Slightly smaller than Title */
+    font-size: 30px;
     font-style: italic;
     text-align: center;
     margin-bottom: 10px;
 }
 
+/* Key Information */
 .key {
     font-size: 24px;
     font-weight: bold;
@@ -23,40 +29,12 @@ body {
     margin-bottom: 10px;
 }
 
-.metadata-item {
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 5px;
-}
-
-
-.tab-section {
-    font-family: "Courier New", monospace;  /* Monospaced font for tabs */
-    font-size: 24px;
-    white-space: pre;
-    margin-top: 10px;
-    padding: 5px;
-}
-.chord-line {
-    font-size: 30px;
-    font-weight: bold;
-    color: blue;  /* FIX: Make chords blue */
-    display: block;
-    white-space: pre;
-}
-
-.lyrics-line {
-    font-size: 30px;
-    display: block;
-    white-space: pre;
-}
-
-.chorus {
-    font-size: 28px;
-    font-style: italic;
-    border-left: 5px solid blue;  /* Blockquote styling */
-    padding-left: 10px;
-    margin: 15px 0;
+/* Two-Column Verse Layout */
+.verse-container {
+    display: grid;
+    grid-template-columns: 150px auto; /* Left: Verse label | Right: Verse content */
+    gap: 10px;
+    align-items: start;
 }
 
 .verse-label {
@@ -64,5 +42,42 @@ body {
     font-weight: bold;
     color: darkgreen;
     text-transform: uppercase;
-    margin-bottom: 5px;
+    padding-left: 10px;
+}
+
+.verse-content {
+    padding-left: 20px; /* Indents verse content */
+}
+
+/* Move Chorus & Tab into Second Column */
+.chorus, .tab-section {
+    grid-column: 2; /* Ensures they appear in the second column */
+}
+
+/* Chords & Lyrics */
+.chord-line {
+    font-size: 30px;
+    font-weight: bold;
+    color: blue;
+    display: block;
+    white-space: pre;
+    padding-bottom: 5px;
+}
+
+.lyrics-line {
+    font-size: 30px;
+    display: block;
+    white-space: pre;
+    padding-top: 5px;
+}
+
+/* Chorus Blockquote Fix */
+.chorus {
+    font-size: 28px;
+    font-style: italic;
+    border-left: 5px solid blue;
+    padding-left: 20px; /* Moves blockquote with indent */
+    margin-left: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
