@@ -24,9 +24,16 @@ function parseChordPro(text) {
             chorusBuffer += `</blockquote>`;
             parsedHtml += `<div class="verse-container"><div></div><div class="verse-content">${chorusBuffer}</div></div>`;
             chorusBuffer = "";
+        } else if (line.startsWith("{start_of_verse}")) {
+            insideVerse = true;
+            verseLabel = "Verse"; // Default label when none provided
+            verseBuffer = `<div class="verse-container">
+                              <div class="verse-label">${verseLabel}</div>
+                              <div class="verse-content">`;
         } else if (line.startsWith("{start_of_verse:")) {
             insideVerse = true;
             verseLabel = line.replace("{start_of_verse:", "").replace("}", "").trim();
+            verseLabel = verseLabel ? verseLabel : "Verse"; // Default to "Verse" if empty
             verseBuffer = `<div class="verse-container">
                               <div class="verse-label">${verseLabel}</div>
                               <div class="verse-content">`;

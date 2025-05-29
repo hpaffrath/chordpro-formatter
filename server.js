@@ -20,7 +20,7 @@ const chordProText = `{title: My Song}
 E|--0--1--0---|
 B|--1--3--1---|
 {end_of_tab}
-{start_of_verse: Verse 2}
+{start_of_verse}
 [D]Another [G]line
 {end_of_verse}
 {start_of_chorus}
