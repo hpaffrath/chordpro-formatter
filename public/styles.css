@@ -59,3 +59,10 @@ body {
     margin: 15px 0;
 }
 
+.verse-label {
+    font-size: 22px;
+    font-weight: bold;
+    color: darkgreen;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}

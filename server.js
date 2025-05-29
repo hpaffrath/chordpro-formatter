@@ -10,7 +10,9 @@ app.use(express.static("public")); // Serve static files
 const chordProText = `{title: My Song}
 {subtitle: A Beautiful Melody}
 {key: C Major}
+{start_of_verse: Verse 1}
 [C]Hello [G]world
+{end_of_verse}
 {start_of_chorus}
 [Am]This [F]is [C]a test
 {end_of_chorus}
@@ -18,7 +20,9 @@ const chordProText = `{title: My Song}
 E|--0--1--0---|
 B|--1--3--1---|
 {end_of_tab}
+{start_of_verse: Verse 2}
 [D]Another [G]line
+{end_of_verse}
 {start_of_chorus}
 [Am]This [F]is a te[C]st 2
 {end_of_chorus}
