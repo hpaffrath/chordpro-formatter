@@ -1,0 +1,61 @@
+body {
+    font-family: "Fira Mono", monospace;
+}
+
+.title {
+    font-size: 40px;  /* Enlarged Title */
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 30px;  /* Slightly smaller than Title */
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.key {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.metadata-item {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+
+.tab-section {
+    font-family: "Courier New", monospace;  /* Monospaced font for tabs */
+    font-size: 24px;
+    white-space: pre;
+    margin-top: 10px;
+    padding: 5px;
+}
+.chord-line {
+    font-size: 30px;
+    font-weight: bold;
+    color: blue;  /* FIX: Make chords blue */
+    display: block;
+    white-space: pre;
+}
+
+.lyrics-line {
+    font-size: 30px;
+    display: block;
+    white-space: pre;
+}
+
+.chorus {
+    font-size: 28px;
+    font-style: italic;
+    border-left: 5px solid blue;  /* Blockquote styling */
+    padding-left: 10px;
+    margin: 15px 0;
+}
+
