@@ -6,6 +6,7 @@ function parseChordPro(text) {
     let insideChorus = false;
     let insideVerse = false;
     let verseLabel = "";
+    let chorusLabel = "";
     let chorusBuffer = "";
     let verseBuffer = "";
 
@@ -18,15 +19,25 @@ function parseChordPro(text) {
             parsedHtml += `</div></div>`;
         } else if (line.startsWith("{start_of_chorus}")) {
             insideChorus = true;
-            chorusBuffer = `<blockquote class="chorus">`;
+            chorusLabel = "Chorus"; // Default label if none provided
+            chorusBuffer = `<div class="verse-container">
+                              <div class="verse-label">${chorusLabel}</div>
+                              <div class="verse-content"><blockquote class="chorus">`;
+        } else if (line.startsWith("{start_of_chorus:")) {
+            insideChorus = true;
+            chorusLabel = line.replace("{start_of_chorus:", "").replace("}", "").trim();
+            chorusLabel = chorusLabel ? chorusLabel : "Chorus"; // Default to "Chorus" if empty
+            chorusBuffer = `<div class="verse-container">
+                              <div class="verse-label">${chorusLabel}</div>
+                              <div class="verse-content"><blockquote class="chorus">`;
         } else if (line.startsWith("{end_of_chorus}")) {
             insideChorus = false;
-            chorusBuffer += `</blockquote>`;
-            parsedHtml += `<div class="verse-container"><div></div><div class="verse-content">${chorusBuffer}</div></div>`;
+            chorusBuffer += `</blockquote></div></div>`;
+            parsedHtml += chorusBuffer;
             chorusBuffer = "";
         } else if (line.startsWith("{start_of_verse}")) {
             insideVerse = true;
-            verseLabel = "Verse"; // Default label when none provided
+            verseLabel = "Verse"; // Default label if none provided
             verseBuffer = `<div class="verse-container">
                               <div class="verse-label">${verseLabel}</div>
                               <div class="verse-content">`;
@@ -43,8 +54,17 @@ function parseChordPro(text) {
             parsedHtml += verseBuffer;
             verseBuffer = "";
         } else if (insideTab) {
-            parsedHtml += `${line}<br>`;
-        } else if (line.startsWith("{title: ")) {
+    let formattedLine = line.replace(/-/g, "─").replace(/\|/g, "┼"); // Replace dashes & pipes
+
+    // Adjust left-side pipe (first occurrence after string name)
+    formattedLine = formattedLine.replace(/^([A-Za-z]\s*)┼/, "$1├");
+
+    // Adjust right-side pipe (last occurrence)
+    formattedLine = formattedLine.replace(/┼$/, "┤");
+
+    parsedHtml += `${formattedLine}<br>`;
+}
+ else if (line.startsWith("{title: ")) {
             metadata += `<h1 class='title'>${line.replace("{title: ", "").replace("}", "")}</h1>`;
         } else if (line.startsWith("{subtitle: ")) {
             metadata += `<h2 class='subtitle'>${line.replace("{subtitle: ", "").replace("}", "")}</h2>`;
