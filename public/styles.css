@@ -85,9 +85,11 @@ body {
 
 /* Tab Sections - Now Using Fira Code */
 .tab-section {
-    font-family: 'Cascadia Code', monospace;
+    font-family: 'Fira Code', monospace;
     font-size: 24px;
     white-space: pre;
-    margin-top: 10px;
-    padding: 5px;
+    margin-top: 5px; /* Reduce top margin */
+    padding: 2px; /* Reduce padding */
+    line-height: 1; /* Set single spacing */
 }
+
