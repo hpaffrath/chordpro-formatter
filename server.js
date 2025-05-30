@@ -5,8 +5,11 @@ const port = 3000;
 
 app.set("view engine", "ejs"); // Use EJS for templating
 app.use(express.static("public")); // Serve static files
+app.use(express.json()); // Middleware for JSON parsing
 
-// Sample ChordPro Data
+const parseChordPro = require("./public/script"); // Import parsing script
+
+// Sample ChordPro Data (initial rendering)
 const chordProText = `{title: No Longer Slaves - Capo Version}
 {subtitle: Capo Version}
 {key: B}
@@ -24,98 +27,17 @@ I'm no lon[E]ger a [F#]slave to fear[B]
 I [G#m]am a [F#]child of God[B]
 {end_of_chorus}
 {c: chorus 2x}
-
-
-{start_of_verse: Verse 2}
-From my moth[B]ers womb
-You have cho[D#m]sen me
-[E]Love has call[F#]ed my name[B]
-I've been bo[B]rn again, into your family[D#m]
-Your [E]blood flows thro[F#]ugh my veins[B]
-{end_of_verse}
-
-{start_of_tab}
-Verse
-e|--------10----|--------10----|--------10----|--------10-----|
-B|-11-----------|-11-----------|-10-----------|-10------------|
-G|----10-----10-|----10-----10-|----10-----10-|----10-----10\\-|
-D|--------------|--------------|--------------|---------------|
-A|--------------|--------------|--------------|---------------|
-E|--------------|--------------|--------------|---------------|
-
-e|--------8-----|---------10-----|---------10-----|
-B|-8------------|-10-------------|-11-------------|
-G|---8-------8/-|-----10------10-|-----10------10-|
-D|--------------|----------------|----------------|
-A|--------------|----------------|----------------|
-E|--------------|----------------|----------------|
-{end_of_tab}
-
-{c: Chorus 4x}
-{start_of_tab}
-Chorus   
-e|----11-------8--------6----|----6--------5------6------|
-B|----11-------10-------6----|----8--------6------6------|
-G|----12-------8--------7----|----7--------5------7------|
-D|---------------------------|---------------------------|
-A|---------------------------|---------------------------|
-E|---------------------------|---------------------------|
-{end_of_tab}
-
-{start_of_verse: Verse 3}
-(NC)
-I am surrounded by the arms of the Father
-(NC)
-I am surrounded by songs of deliverance
-[G#m]We've [F#]been [B]liber[E]ated [G#m]from our bon[B]dage[E]
-[G#m]We're [F#]the sons [B]and the [E]daughters
-[G#m]Let us [F#]sing our [B]freedom
-{end_of_verse} 
-
-{start_of_verse: Interlude}
-[G#m]Ohhh,[F#]Ohhh, [B][E]
-{end_of_verse}
-{c: part 2x}
-
-{start_of_tab}
-Bridge/Whoa's
-e|-------0-------0-|-------0---------|-------0------0-|---0------------0-|
-B|---0-------0-----|---------------0-|---0-------0----|-------6----6-----|
-G|-7---7---7---7---|-5-5-5---5-5-5---|-7---7---7---7--|-8---8----8---8---|
-D|-----------------|-----------------|----------------|------------------|
-A|-----------------|-----------------|----------------|------------------|
-E|-----------------|-----------------|----------------|------------------|
-Repeat
-{end_of_tab}
-
-
-{start_of_verse: Bridge}
-[G#m]You split the [F#]sea, so I could [B]walk right [E]through it
-[G#m]All my fears were [F#]drowned in perfect [B]love [E]
-[G#m]You rescued [F#]me, so I could [B]stand and [D#m]sing
-I [E]am a [F#]child of [B]God
-{end_of_verse}
-{start_of_tab}
-Ending
-e|-------0--------0--------|--------0--------0-------|-----0-----0---------0-----0-----|
-B|----11------11--------11-|----10-------10-------10-|---6-----6-----6---6-----6-----6-|
-G|-12------12-------12-----|-10-------10-------10----|-7-----5-----5---7-----7-----7---|
-D|-------------------------|-------------------------|---------------------------------|
-A|-------------------------|-------------------------|---------------------------------|
-E|-------------------------|-------------------------|---------------------------------|
-{end_of_tab}
-
-
-
-{c: Chorus}
-
 `;
-
-const parseChordPro = require("./public/script"); // Import script
 
 app.get("/", (req, res) => {
     const formattedData = parseChordPro(chordProText);
     res.render("index", { metadata: formattedData.metadata, output: formattedData.output });
+});
+
+// API endpoint for rendering ChordPro input dynamically
+app.post("/render", (req, res) => {
+    const formattedData = parseChordPro(req.body.chordPro);
+    res.json({ metadata: formattedData.metadata, output: formattedData.output });
 });
 
 app.listen(port, () => {

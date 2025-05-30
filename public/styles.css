@@ -7,60 +7,48 @@ body {
     padding: 0;
 }
 
+.container {
+    display: flex;
+    gap: 20px;
+}
+
+.editor {
+    width: 50%;
+}
+
+textarea {
+    width: 100%;
+    height: 90vh;
+    font-family: monospace;
+    font-size: 16px;
+    padding: 10px;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.output-area {
+    width: 50%;
+}
+
 /* Title & Subtitle Styling */
 .title {
     font-size: 30px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 0px;
+    margin-top: 0;
+    padding-top: 0;
+    text-align: center;
+    display:block;
 }
 
 .subtitle {
     font-size: 22px;
     font-style: italic;
     text-align: center;
-    margin-bottom: 10px;
-}
-
-/* Key Information */
-.key {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-/* Artist Information */
-.artist {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-/* Two-Column Verse Layout */
-.verse-container {
-    display: grid;
-    grid-template-columns: 80px auto; /* Left: Verse label | Right: Verse content */
-    gap: 10px;
-    align-items: start;
-}
-
-.verse-label {
-    font-size: 16px;
-    font-weight: bold;
-    color: darkgreen;
-    text-transform: uppercase;
-    padding-left: 10px;
-}
-
-.verse-content {
-    padding-left: 20px; /* Indents verse content */
-}
-
-/* Move Chorus & Tab into Second Column */
-.chorus, .tab-section {
-    grid-column: 2; /* Ensures they appear in the second column */
 }
 
 /* Chords & Lyrics */
@@ -70,60 +58,62 @@ body {
     color: blue;
     display: block;
     white-space: pre;
-    padding-bottom: 5px;
 }
 
 .lyrics-line {
     font-size: 22px;
     display: block;
     white-space: pre;
-    padding-top: 5px;
 }
 
-/* Chorus Blockquote Fix */
-.chorus {
-    font-size: 21px;
-    font-style: italic;
-    border-left: 5px solid blue;
-    padding-left: 20px; /* Moves blockquote with indent */
-    margin-left: 20px;
-    margin-top: 15px;
-    margin-bottom: 15px;
+/* Two-Column Verse Layout */
+.verse-container {
+    display: grid;
+    grid-template-columns: 80px auto;
+    gap: 10px;
+    align-items: start;
 }
 
-/* Tab Sections - Now Using Fira Code */
-.tab-section {
-    font-family: 'Fira Code', monospace;
-    font-size: 16px;
-    white-space: pre;
-    margin-top: 5px; /* Reduce top margin */
-    padding: 2px; /* Reduce padding */
-    line-height: 1; /* Set single spacing */
-    padding-left: 0px; /* Moves tabs further to the right */
+.verse-label {
+    font-size: 18px;
+    font-weight: bold;
+    color: darkgreen;
+    text-transform: uppercase;
 }
 
-/* Two-Column Chorus Layout */
+/* Two-Column Verse Layout */
 .chorus-container {
     display: grid;
-    grid-template-columns: 80px auto; /* Left: Chorus label | Right: Chorus content */
+    grid-template-columns: 80px auto;
     gap: 10px;
     align-items: start;
 }
 
 .chorus-label {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
-    color: darkblue;
+    color: darkgreen;
     text-transform: uppercase;
-    padding-left: 10px;
-}
-
-.chorus-content {
-    padding-left: 10px; /* Apply light indentation for balance */
-    margin-top: 10px; /* Reduce spacing issues */
 }
 
 .comment {
+    font-size: 16px;
     font-style: italic;
     color: green;
+}
+
+.metadata {
+    margin-top: 0;
+    padding-top: 0;
+}   
+
+
+.tab-section {
+    font-family: 'Fira Mono', monospace;
+    font-size: 13px;
+    letter-spacing: -0.5px; /* Reduces spacing between characters */
+}
+.blank-line {
+    height: 20px; /* Adjust spacing as needed */
+    display: block;
 }
