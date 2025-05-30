@@ -42,7 +42,7 @@ textarea {
     margin-top: 0;
     padding-top: 0;
     text-align: center;
-    display:block;
+    display: block;
 }
 
 .subtitle {
@@ -69,7 +69,7 @@ textarea {
 /* Two-Column Verse Layout */
 .verse-container {
     display: grid;
-    grid-template-columns: 80px auto;
+    grid-template-columns: 110px auto;
     gap: 10px;
     align-items: start;
 }
@@ -84,7 +84,7 @@ textarea {
 /* Two-Column Verse Layout */
 .chorus-container {
     display: grid;
-    grid-template-columns: 80px auto;
+    grid-template-columns: 110px auto;
     gap: 10px;
     align-items: start;
 }
@@ -105,15 +105,22 @@ textarea {
 .metadata {
     margin-top: 0;
     padding-top: 0;
-}   
+}
 
 
 .tab-section {
     font-family: 'Fira Mono', monospace;
     font-size: 13px;
-    letter-spacing: -0.5px; /* Reduces spacing between characters */
+    letter-spacing: -0.5px;
+    /* Reduces spacing between characters */
+    margin-top: 5px;
+    /* Reduce spacing before tabs */
+    padding-top: 0;
+    /* Ensure no extra padding */
 }
+
 .blank-line {
-    height: 20px; /* Adjust spacing as needed */
+    height: 20px;
+    /* Adjust spacing as needed */
     display: block;
 }

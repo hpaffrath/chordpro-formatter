@@ -1,30 +1,33 @@
 function extractMetadata(line) {
-    if (line.startsWith("{title: ")) {
-        return `<h1 class='title'>${line.replace("{title: ", "").replace("}", "")}</h1>`;
-    } else if (line.startsWith("{subtitle: ")) {
-        return `<h2 class='subtitle'>${line.replace("{subtitle: ", "").replace("}", "")}</h2>`;
-    } else if (line.startsWith("{key: ")) {
-        return `<div class='key'>Key: ${line.replace("{key: ", "").replace("}", "")}</div>`;
-    } else if (line.startsWith("{artist: ")) {
-        return `<div class='artist'>Artist: ${line.replace("{artist: ", "").replace("}", "")}</div>`;
+    if (line.startsWith("{title:")) {
+        return `<h1 class='title'>${line.replace("{title:", "").replace("}", "")}</h1>`;
+    } else if (line.startsWith("{subtitle:")) {
+        return `<h2 class='subtitle'>${line.replace("{subtitle:", "").replace("}", "")}</h2>`;
+    } else if (line.startsWith("{key:")) {
+        return `<div class='key'>Key: ${line.replace("{key:", "").replace("}", "")}</div>`;
+    } else if (line.startsWith("{artist:")) {
+        return `<div class='artist'>Artist: ${line.replace("{artist:", "").replace("}", "")}</div>`;
     }
     return "";
 }
 
 function parseVerse(line, insideVerse, verseLabel, verseBuffer, parsedHtml) {
-    if (line.startsWith("{start_of_verse}")) {
+    if (line.startsWith("{start_of_verse}") || line.startsWith("{start_of_part}")) {
         insideVerse = true;
-        verseLabel = "Verse";
+        verseLabel = "Verse"; // Default label if no custom name is given
         verseBuffer = `<div class="verse-container"><div class="verse-label">${verseLabel}</div><div class="verse-content">`;
         return { insideVerse, verseLabel, verseBuffer, parsedHtml, output: "" };
-    } else if (line.startsWith("{start_of_verse:")) {
+    } else if (line.startsWith("{start_of_verse:") || line.startsWith("{start_of_part:")) {
         insideVerse = true;
-        verseLabel = line.replace("{start_of_verse:", "").replace("}", "").trim();
+
+        // Extract label correctly
+        verseLabel = line.match(/\{start_of_(?:verse|part):(.*?)\}/)?.[1]?.trim() || "Verse";
+
         verseBuffer = `<div class="verse-container"><div class="verse-label">${verseLabel}</div><div class="verse-content">`;
         return { insideVerse, verseLabel, verseBuffer, parsedHtml, output: "" };
-    } else if (line.startsWith("{end_of_verse}")) {
+    } else if (line.startsWith("{end_of_verse}") || line.startsWith("{end_of_part}")) {
         insideVerse = false;
-        verseBuffer += `</div></div><br><br>`; // **Adds blank line after verse**
+        verseBuffer += `</div></div>`;
         parsedHtml += verseBuffer;
         verseBuffer = "";
         return { insideVerse, verseLabel, verseBuffer, parsedHtml, output: "" };
@@ -101,11 +104,10 @@ function parseChordPro(text) {
     let tabBuffer = "";
 
     lines.forEach(line => {
-        if (line.trim() === "") {
-            parsedHtml += "<div class='blank-line'>&nbsp;</div>"; // Adds space while preserving structure
+        if (line.trim() === "" && insideTab === false) {
+            parsedHtml += "<br>"; // Only add space when NOT inside a tab
             return;
-        }
-        let extractedMetadata = extractMetadata(line);
+        } let extractedMetadata = extractMetadata(line);
         if (extractedMetadata) {
             metadata += extractedMetadata;
             return;
