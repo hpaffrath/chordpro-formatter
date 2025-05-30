@@ -101,6 +101,10 @@ function parseChordPro(text) {
     let tabBuffer = "";
 
     lines.forEach(line => {
+        if (line.trim() === "") {
+            parsedHtml += "<div class='blank-line'>&nbsp;</div>"; // Adds space while preserving structure
+            return;
+        }
         let extractedMetadata = extractMetadata(line);
         if (extractedMetadata) {
             metadata += extractedMetadata;
@@ -128,11 +132,6 @@ function parseChordPro(text) {
         if (tabData.output === "") return;
 
         line = parseComment(line); // **Apply comment formatting here**
-
-        if (line.trim() === "") {
-            parsedHtml += "<div class='blank-line'>&nbsp;</div>"; // Adds space while preserving structure
-            return;
-        }
 
         let chordLine = "";
         let lyricsLine = "";
