@@ -109,10 +109,6 @@ E|-------------------------|-------------------------|--------------------------
 
 {c: Chorus}
 
-
-
-
-# --- Song data for GuitarTapp library, do not remove:
 `;
 
 const parseChordPro = require("./public/script"); // Import script
