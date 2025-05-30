@@ -6,7 +6,7 @@ function extractMetadata(line) {
     } else if (line.startsWith("{key:")) {
         return `<div class='key'>Key: ${line.replace("{key:", "").replace("}", "")}</div>`;
     } else if (line.startsWith("{artist:")) {
-        return `<div class='artist'>Artist: ${line.replace("{artist:", "").replace("}", "")}</div>`;
+        return `<h2 class='artist'>${line.replace("{artist:", "").replace("}", "")}</h3>`;
     }
     return "";
 }

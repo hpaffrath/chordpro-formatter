@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
 </head>
+
 <body>
 
     <div class="container">
@@ -19,15 +21,15 @@
         </div>
 
         <div class="output-area">
-            <div id="metadata" class="metadata"><%- metadata %></div>  
-            <div id="output"><%- output %></div>  
+            <div id="metadata" class="metadata"><%- metadata %></div>
+            <div id="output"><%- output %></div>
         </div>
     </div>
 
     <script>
         document.getElementById("renderButton").addEventListener("click", async () => {
             const chordProText = document.getElementById("chordProEditor").value;
-            
+
             const response = await fetch("/render", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -41,12 +43,27 @@
 
         document.getElementById("printButton").addEventListener("click", () => {
             const content = document.querySelector(".output-area");
+
+            // Extract title and artist from metadata
+            const title = document.querySelector(".title")?.textContent.trim() || "Untitled";
+            const artist = document.querySelector(".artist")?.textContent.replace("Artist: ", "").trim() || "";
+
+            // Construct filename
+            const filename = artist ? `${title}-${artist}.pdf` : `${title}.pdf`;
+
             html2pdf()
-                .set({ margin: 10, filename: "ChordPro_Song.pdf", image: { type: "jpeg", quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: "mm", format: "a4", orientation: "portrait" } })
+                .set({
+                    margin: [5, 5, 5, 5],
+                    filename: filename, // ✅ Use dynamic filename
+                    image: { type: "jpeg", quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+                })
                 .from(content)
                 .save();
         });
     </script>
 
 </body>
+
 </html>

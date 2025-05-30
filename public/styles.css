@@ -51,6 +51,12 @@ textarea {
     text-align: center;
 }
 
+.artist {
+    font-size: 22px;
+    font-style: italic;
+    text-align: center;
+}
+
 /* Chords & Lyrics */
 .chord-line {
     font-size: 22px;
