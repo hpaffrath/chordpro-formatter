@@ -2,21 +2,21 @@
 
 body {
     font-family: "Fira Mono", monospace;
-    line-height: 1.6;
+    line-height: 1;
     margin: 20px;
     padding: 0;
 }
 
 /* Title & Subtitle Styling */
 .title {
-    font-size: 40px;
+    font-size: 30px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
 .subtitle {
-    font-size: 30px;
+    font-size: 22px;
     font-style: italic;
     text-align: center;
     margin-bottom: 10px;
@@ -24,7 +24,15 @@ body {
 
 /* Key Information */
 .key {
-    font-size: 24px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Artist Information */
+.artist {
+    font-size: 18px;
     font-weight: bold;
     text-align: center;
     margin-bottom: 10px;
@@ -33,13 +41,13 @@ body {
 /* Two-Column Verse Layout */
 .verse-container {
     display: grid;
-    grid-template-columns: 150px auto; /* Left: Verse label | Right: Verse content */
+    grid-template-columns: 80px auto; /* Left: Verse label | Right: Verse content */
     gap: 10px;
     align-items: start;
 }
 
 .verse-label {
-    font-size: 22px;
+    font-size: 16px;
     font-weight: bold;
     color: darkgreen;
     text-transform: uppercase;
@@ -57,7 +65,7 @@ body {
 
 /* Chords & Lyrics */
 .chord-line {
-    font-size: 30px;
+    font-size: 22px;
     font-weight: bold;
     color: blue;
     display: block;
@@ -66,7 +74,7 @@ body {
 }
 
 .lyrics-line {
-    font-size: 30px;
+    font-size: 22px;
     display: block;
     white-space: pre;
     padding-top: 5px;
@@ -74,7 +82,7 @@ body {
 
 /* Chorus Blockquote Fix */
 .chorus {
-    font-size: 28px;
+    font-size: 21px;
     font-style: italic;
     border-left: 5px solid blue;
     padding-left: 20px; /* Moves blockquote with indent */
@@ -86,10 +94,36 @@ body {
 /* Tab Sections - Now Using Fira Code */
 .tab-section {
     font-family: 'Fira Code', monospace;
-    font-size: 24px;
+    font-size: 16px;
     white-space: pre;
     margin-top: 5px; /* Reduce top margin */
     padding: 2px; /* Reduce padding */
     line-height: 1; /* Set single spacing */
+    padding-left: 0px; /* Moves tabs further to the right */
 }
 
+/* Two-Column Chorus Layout */
+.chorus-container {
+    display: grid;
+    grid-template-columns: 80px auto; /* Left: Chorus label | Right: Chorus content */
+    gap: 10px;
+    align-items: start;
+}
+
+.chorus-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: darkblue;
+    text-transform: uppercase;
+    padding-left: 10px;
+}
+
+.chorus-content {
+    padding-left: 10px; /* Apply light indentation for balance */
+    margin-top: 10px; /* Reduce spacing issues */
+}
+
+.comment {
+    font-style: italic;
+    color: green;
+}

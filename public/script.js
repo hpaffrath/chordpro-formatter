@@ -18,38 +18,38 @@ function parseChordPro(text) {
             insideTab = false;
             parsedHtml += `</div></div>`;
         } else if (insideTab) {
-    let formattedLine = line.replace(/-/g, "─").replace(/\|/g, "┼"); // Replace dashes & pipes
+            let formattedLine = line.replace(/-/g, "─").replace(/\|/g, "┼"); // Replace dashes & pipes
 
-    // If the line starts with 'e' or 'E', adjust top corners
-    if (/^[e]/.test(line)) {
-        formattedLine = formattedLine.replace(/^([eE]\s*)┼/, "$1┌")
-        formattedLine = formattedLine.replace(/┼$/, "┐") 
-        formattedLine = formattedLine.replace(/─┼─/g, "─┬─")
-    } 
-    else if (/^[E]/.test(line)) {
-        formattedLine = formattedLine.replace(/^([E]\s*)┼/, "$1└")
-        formattedLine = formattedLine.replace(/┼$/, "┘")
-        formattedLine = formattedLine.replace(/─┼─/g, "─┴─")
-    } else if (/^[BGDA]/.test(line)) {
-        formattedLine = formattedLine.replace(/^([BDGA]\s*)┼/, "$1├")
-        formattedLine = formattedLine.replace(/[BDGA]┼/g, "$1├"); // Replace "B┼" with "B├" (rotated T facing left)
-        formattedLine = formattedLine.replace(/┼$/, "┤") 
-    }  
+            // If the line starts with 'e' or 'E', adjust top corners
+            if (/^[e]/.test(line)) {
+                formattedLine = formattedLine.replace(/^([eE]\s*)┼/, "$1┌")
+                formattedLine = formattedLine.replace(/┼$/, "┐")
+                formattedLine = formattedLine.replace(/─┼─/g, "─┬─")
+            }
+            else if (/^[E]/.test(line)) {
+                formattedLine = formattedLine.replace(/^([E]\s*)┼/, "$1└")
+                formattedLine = formattedLine.replace(/┼$/, "┘")
+                formattedLine = formattedLine.replace(/─┼─/g, "─┴─")
+            } else if (/^[BGDA]/.test(line)) {
+                formattedLine = formattedLine.replace(/^([BDGA]\s*)┼/, "$1├")
+                formattedLine = formattedLine.replace(/[BDGA]┼/g, "$1├"); // Replace "B┼" with "B├" (rotated T facing left)
+                formattedLine = formattedLine.replace(/┼$/, "┤")
+            }
 
-    parsedHtml += `${formattedLine}<br>`;
-} else if (line.startsWith("{start_of_chorus}")) {
+            parsedHtml += `${formattedLine}<br>`;
+        } else if (line.startsWith("{start_of_chorus}")) {
             insideChorus = true;
             chorusLabel = "Chorus";
-            chorusBuffer = `<div class="verse-container">
-                              <div class="verse-label">${chorusLabel}</div>
-                              <div class="verse-content"><blockquote class="chorus">`;
+            chorusBuffer = `<div class="chorus-container">
+                              <div class="chorus-label">${chorusLabel}</div>
+                              <div class="chorus-content"><blockquote class="chorus">`;
         } else if (line.startsWith("{start_of_chorus:")) {
             insideChorus = true;
             chorusLabel = line.replace("{start_of_chorus:", "").replace("}", "").trim();
             chorusLabel = chorusLabel ? chorusLabel : "Chorus";
-            chorusBuffer = `<div class="verse-container">
-                              <div class="verse-label">${chorusLabel}</div>
-                              <div class="verse-content"><blockquote class="chorus">`;
+            chorusBuffer = `<div class="chorus-container">
+                              <div class="chorus-label">${chorusLabel}</div>
+                              <div class="chorus-content"><blockquote class="chorus">`;
         } else if (line.startsWith("{end_of_chorus}")) {
             insideChorus = false;
             chorusBuffer += `</blockquote></div></div>`;
@@ -79,7 +79,12 @@ function parseChordPro(text) {
             metadata += `<h2 class='subtitle'>${line.replace("{subtitle: ", "").replace("}", "")}</h2>`;
         } else if (line.startsWith("{key: ")) {
             metadata += `<div class='key'>Key: ${line.replace("{key: ", "").replace("}", "")}</div>`;
+        } else if (line.startsWith("{artist: ")) {
+            metadata += `<div class='artist'>Artist: ${line.replace("{artist: ", "").replace("}", "")}</div>`;
         } else {
+            // Apply inline comment formatting before parsing chords and lyrics
+            line = line.replace(/\{comment:\s*(.*?)\}/g, "<em class='comment'>$1</em>");
+            line = line.replace(/\{c:\s*(.*?)\}/g, "<em class='comment'>$1</em>");
             let chordLine = "";
             let lyricsLine = "";
             let chordBuffer = "";
@@ -95,8 +100,8 @@ function parseChordPro(text) {
                 } else {
                     lyricsLine += line[i];
                     padCount++;
-                    chordLine += chordBuffer 
-                        ? chordBuffer.padEnd(chordBuffer.length, " ") 
+                    chordLine += chordBuffer
+                        ? chordBuffer.padEnd(chordBuffer.length, " ")
                         : (chordCount == 1 && padCount == 2 && insideChorus) ? "" : " ";
                     chordBuffer = "";
                 }
@@ -106,7 +111,9 @@ function parseChordPro(text) {
             lyricsLine = `<div class='lyrics-line'>${lyricsLine}</div>`;
 
             if (insideChorus) {
-                chorusBuffer += chordLine + lyricsLine;
+    chorusBuffer += `<div class="chorus-container">
+                        <div class="chorus-content">${chordLine}${lyricsLine}</div>
+                     </div>`;
             } else if (insideVerse) {
                 verseBuffer += chordLine + lyricsLine;
             } else {
