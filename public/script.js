@@ -17,16 +17,36 @@ function parseChordPro(text) {
         } else if (line.startsWith("{end_of_tab}")) {
             insideTab = false;
             parsedHtml += `</div></div>`;
-        } else if (line.startsWith("{start_of_chorus}")) {
+        } else if (insideTab) {
+    let formattedLine = line.replace(/-/g, "─").replace(/\|/g, "┼"); // Replace dashes & pipes
+
+    // If the line starts with 'e' or 'E', adjust top corners
+    if (/^[e]/.test(line)) {
+        formattedLine = formattedLine.replace(/^([eE]\s*)┼/, "$1┌")
+        formattedLine = formattedLine.replace(/┼$/, "┐") 
+        formattedLine = formattedLine.replace(/─┼─/g, "─┬─")
+    } 
+    else if (/^[E]/.test(line)) {
+        formattedLine = formattedLine.replace(/^([E]\s*)┼/, "$1└")
+        formattedLine = formattedLine.replace(/┼$/, "┘")
+        formattedLine = formattedLine.replace(/─┼─/g, "─┴─")
+    } else if (/^[BGDA]/.test(line)) {
+        formattedLine = formattedLine.replace(/^([BDGA]\s*)┼/, "$1├")
+        formattedLine = formattedLine.replace(/[BDGA]┼/g, "$1├"); // Replace "B┼" with "B├" (rotated T facing left)
+        formattedLine = formattedLine.replace(/┼$/, "┤") 
+    }  
+
+    parsedHtml += `${formattedLine}<br>`;
+} else if (line.startsWith("{start_of_chorus}")) {
             insideChorus = true;
-            chorusLabel = "Chorus"; // Default label if none provided
+            chorusLabel = "Chorus";
             chorusBuffer = `<div class="verse-container">
                               <div class="verse-label">${chorusLabel}</div>
                               <div class="verse-content"><blockquote class="chorus">`;
         } else if (line.startsWith("{start_of_chorus:")) {
             insideChorus = true;
             chorusLabel = line.replace("{start_of_chorus:", "").replace("}", "").trim();
-            chorusLabel = chorusLabel ? chorusLabel : "Chorus"; // Default to "Chorus" if empty
+            chorusLabel = chorusLabel ? chorusLabel : "Chorus";
             chorusBuffer = `<div class="verse-container">
                               <div class="verse-label">${chorusLabel}</div>
                               <div class="verse-content"><blockquote class="chorus">`;
@@ -37,14 +57,14 @@ function parseChordPro(text) {
             chorusBuffer = "";
         } else if (line.startsWith("{start_of_verse}")) {
             insideVerse = true;
-            verseLabel = "Verse"; // Default label if none provided
+            verseLabel = "Verse";
             verseBuffer = `<div class="verse-container">
                               <div class="verse-label">${verseLabel}</div>
                               <div class="verse-content">`;
         } else if (line.startsWith("{start_of_verse:")) {
             insideVerse = true;
             verseLabel = line.replace("{start_of_verse:", "").replace("}", "").trim();
-            verseLabel = verseLabel ? verseLabel : "Verse"; // Default to "Verse" if empty
+            verseLabel = verseLabel ? verseLabel : "Verse";
             verseBuffer = `<div class="verse-container">
                               <div class="verse-label">${verseLabel}</div>
                               <div class="verse-content">`;
@@ -53,18 +73,7 @@ function parseChordPro(text) {
             verseBuffer += `</div></div>`;
             parsedHtml += verseBuffer;
             verseBuffer = "";
-        } else if (insideTab) {
-    let formattedLine = line.replace(/-/g, "─").replace(/\|/g, "┼"); // Replace dashes & pipes
-
-    // Adjust left-side pipe (first occurrence after string name)
-    formattedLine = formattedLine.replace(/^([A-Za-z]\s*)┼/, "$1├");
-
-    // Adjust right-side pipe (last occurrence)
-    formattedLine = formattedLine.replace(/┼$/, "┤");
-
-    parsedHtml += `${formattedLine}<br>`;
-}
- else if (line.startsWith("{title: ")) {
+        } else if (line.startsWith("{title: ")) {
             metadata += `<h1 class='title'>${line.replace("{title: ", "").replace("}", "")}</h1>`;
         } else if (line.startsWith("{subtitle: ")) {
             metadata += `<h2 class='subtitle'>${line.replace("{subtitle: ", "").replace("}", "")}</h2>`;
