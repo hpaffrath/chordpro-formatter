@@ -6,7 +6,7 @@ function extractMetadata(line) {
     } else if (line.startsWith("{key:")) {
         return `<div class='key'>Key: ${line.replace("{key:", "").replace("}", "")}</div>`;
     } else if (line.startsWith("{artist:")) {
-        return `<h2 class='artist'>${line.replace("{artist:", "").replace("}", "")}</h3>`;
+        return `<h2 class='artist'>${line.replace("{artist:", "").replace("}", "")}</h2>`;
     }
     return "";
 }
@@ -56,7 +56,6 @@ function parseChorus(line, insideChorus, chorusLabel, chorusBuffer, parsedHtml) 
     return { insideChorus, chorusLabel, chorusBuffer, parsedHtml, output: line };
 }
 
-
 function parseTab(line, insideTab, tabBuffer, parsedHtml) {
     if (line.startsWith("{start_of_tab}")) {
         insideTab = true;
@@ -79,7 +78,7 @@ function parseTab(line, insideTab, tabBuffer, parsedHtml) {
             formattedLine = formattedLine.replace(/^([BDGA]\s*)┼/, "$1├").replace(/[BDGA]┼/g, "$1├").replace(/┼$/, "┤");
         }
 
-        tabBuffer += `${formattedLine}<br>`;
+        tabBuffer += `<div class="tab-line">${formattedLine}</div>`;
         return { insideTab, tabBuffer, parsedHtml, output: "" };
     }
     return { insideTab, tabBuffer, parsedHtml, output: line };
@@ -104,15 +103,14 @@ function parseChordPro(text) {
     let tabBuffer = "";
 
     lines.forEach(line => {
-        if (line.trim() === "" && insideTab === false) {
-            parsedHtml += "<br>"; // Only add space when NOT inside a tab
-            return;
-        } let extractedMetadata = extractMetadata(line);
+        // Process metadata first
+        let extractedMetadata = extractMetadata(line);
         if (extractedMetadata) {
             metadata += extractedMetadata;
-            return;
+            return; // Skip further processing
         }
 
+        // Process blocks
         let verseData = parseVerse(line, insideVerse, verseLabel, verseBuffer, parsedHtml);
         insideVerse = verseData.insideVerse;
         verseLabel = verseData.verseLabel;
@@ -133,39 +131,87 @@ function parseChordPro(text) {
         parsedHtml = tabData.parsedHtml;
         if (tabData.output === "") return;
 
-        line = parseComment(line); // **Apply comment formatting here**
+        // Handle empty lines
+        if (line.trim() === "") {
+            if (insideChorus) {
+                chorusBuffer += "<br>";
+            } else if (insideVerse) {
+                verseBuffer += "<br>";
+            } else {
+                parsedHtml += "<br>";
+            }
+            return;
+        }
 
+        // Parse comments
+        line = parseComment(line);
+
+        // Process chords and lyrics with proper alignment
         let chordLine = "";
         let lyricsLine = "";
+        let inChord = false;
         let chordBuffer = "";
-        let chordCount = 0;
-        let padCount = 0;
+        let chordStartIndex = -1;
 
         for (let i = 0; i < line.length; i++) {
-            if (line[i] === "[" && line.indexOf("]", i) !== -2) {
-                let chord = line.substring(i + 1, line.indexOf("]", i));
-                chordBuffer = chordCount === 0 ? chord : chord.trimStart();
-                chordCount++;
-                i = line.indexOf("]", i);
+            if (line[i] === '[') {
+                inChord = true;
+                chordBuffer = "";
+                chordStartIndex = lyricsLine.length;  // Mark where the chord should start
+                continue;
+            } else if (line[i] === ']' && inChord) {
+                inChord = false;
+                
+                // Place chord at the marked position
+                while (chordLine.length < chordStartIndex) {
+                    chordLine += " ";
+                }
+                chordLine += chordBuffer;
+                
+                continue;
+            }
+            
+            if (inChord) {
+                chordBuffer += line[i];
             } else {
                 lyricsLine += line[i];
-                padCount++;
-                chordLine += chordBuffer ? chordBuffer.padEnd(chordBuffer.length, " ") : (chordCount == 1 && padCount == 2 && insideChorus) ? "" : " ";
-                chordBuffer = "";
+                
+                // Add space to chord line if needed to maintain alignment
+                if (chordLine.length < lyricsLine.length) {
+                    chordLine += " ";
+                }
             }
         }
+
+        // Pad chord line to match lyrics line length
+        chordLine = chordLine.padEnd(lyricsLine.length, " ");
 
         chordLine = `<div class='chord-line'>${chordLine}</div>`;
         lyricsLine = `<div class='lyrics-line'>${lyricsLine}</div>`;
 
+        // Add to appropriate buffer
         if (insideChorus) {
-            chorusBuffer += `<div class="chorus-container"><div class="chorus-content">${chordLine}${lyricsLine}</div></div>`;
+            chorusBuffer += chordLine + lyricsLine;
         } else if (insideVerse) {
             verseBuffer += chordLine + lyricsLine;
         } else {
             parsedHtml += chordLine + lyricsLine;
         }
     });
+
+    // Flush any remaining buffers
+    if (insideVerse) {
+        verseBuffer += `</div></div>`;
+        parsedHtml += verseBuffer;
+    }
+    if (insideChorus) {
+        chorusBuffer += `</div></div>`;
+        parsedHtml += chorusBuffer;
+    }
+    if (insideTab) {
+        tabBuffer += `</div></div>`;
+        parsedHtml += tabBuffer;
+    }
 
     return { metadata, output: parsedHtml };
 }
