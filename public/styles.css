@@ -132,14 +132,12 @@ button:hover {
     gap: 10px;
     align-items: start;
     margin-bottom: 25px;
-    background: #f8fafc;
     padding: 15px;
     border-radius: 6px;
     border-left: 3px solid #4a6fa5;
 }
 
 .chorus-container {
-    background: #f8faf8;
     border-left: 3px solid #3d7a1a;
 }
 
@@ -181,7 +179,6 @@ button:hover {
     letter-spacing: -0.5px;
     margin: 15px 0;
     padding: 15px;
-    background: #f8fafc;
     color: #1a1c24;
     border-radius: 4px;
     overflow-x: auto; /* Horizontal scrolling */
