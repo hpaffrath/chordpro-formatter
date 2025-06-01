@@ -252,3 +252,10 @@ button:hover {
         overflow: visible !important;
     }
 }
+
+
+.blank-line {
+    display: block;
+    height: 20px; /* Adjust spacing */
+    width: 100%;
+}
