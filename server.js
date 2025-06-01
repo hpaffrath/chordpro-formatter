@@ -8,46 +8,45 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Import parsing script
 const parseChordPro = require("./public/script");
 
-// Sample ChordPro Data for initial rendering
-const chordProText = `{title: Hotel California}
-{artist: Eagles}
-{key: Bm}
-
-{start_of_chorus}
-[Am]Welcome to the [E7]Hotel Cali[G]fornia
-[D]Such a lovely [F]place, [C]such a lovely [E7]face
-{end_of_chorus}
-
-{start_of_verse: Verse 1}
-[G]On a dark desert highway, [D]cool wind in my hair
-[Em]Warm smell of colitas, [F]rising up through the air
-{end_of_verse}
-
-{comment: Guitar Solo}
-{start_of_tab}
-e|-----0-----0-----0-----0-----|
-B|---1---1-----1-----1-----1---|
-G|-----2-----0-----0-----0-----|
-D|-----------------------------|
-A|-----------------------------|
-E|-----------------------------|
-{end_of_tab}`;
-
-// Cache for storing recently rendered songs
 const renderCache = new Map();
 const CACHE_SIZE = 10;
-const CACHE_EXPIRATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_EXPIRATION = 5 * 60 * 1000;
 
 app.get("/", (req, res) => {
     try {
-        const formattedData = parseChordPro(chordProText);
+        const exampleChordPro = `{title: Hotel California}
+        {artist: Eagles}
+        {key: Bm}
+
+        {start_of_chorus}
+        [Am]Welcome to the [E7]Hotel Cali[G]fornia
+        [D]Such a lovely [F]place, [C]such a lovely [E7]face
+        {end_of_chorus}
+
+        {start_of_verse: Verse 1}
+        [G]On a dark desert highway, [D]cool wind in my hair
+        [Em]Warm smell of colitas, [F]rising up through the air
+        {end_of_verse}
+
+        {comment: Guitar Solo}
+        {start_of_tab}
+        e|-----0-----0-----0-----0-----|
+        B|---1---1-----1-----1-----1---|
+        G|-----2-----0-----0-----0-----|
+        D|-----------------------------|
+        A|-----------------------------|
+        E|-----------------------------|
+        {end_of_tab}`;
+
+        const formattedData = parseChordPro(exampleChordPro);
+        
+        console.log("Initial Render Debug:", formattedData); // Debugging step
+
         res.render("index", { 
             metadata: formattedData.metadata, 
-            output: formattedData.output,
-            initialContent: chordProText
+            output: formattedData.output
         });
     } catch (error) {
         console.error("Initial render error:", error);
@@ -61,8 +60,11 @@ app.get("/", (req, res) => {
 app.post("/render", (req, res) => {
     try {
         const chordPro = req.body.chordPro || "";
+
+        if (!chordPro.trim()) {
+            return res.status(400).json({ error: "Empty ChordPro input" });
+        }
         
-        // Check cache first
         if (renderCache.has(chordPro)) {
             const cached = renderCache.get(chordPro);
             if (Date.now() - cached.timestamp < CACHE_EXPIRATION) {
@@ -70,21 +72,21 @@ app.post("/render", (req, res) => {
             }
             renderCache.delete(chordPro);
         }
-        
+
         const formattedData = parseChordPro(chordPro);
         const result = { 
             metadata: formattedData.metadata, 
             output: formattedData.output 
         };
-        
-        // Update cache
+
+        console.log("Render Debug:", result); // Debugging step
+
         if (chordPro.length > 0) {
             renderCache.set(chordPro, {
                 data: result,
                 timestamp: Date.now()
             });
-            
-            // Enforce cache size limit
+
             if (renderCache.size > CACHE_SIZE) {
                 const oldestKey = [...renderCache.keys()][0];
                 renderCache.delete(oldestKey);
@@ -101,7 +103,6 @@ app.post("/render", (req, res) => {
     }
 });
 
-// Error handling middleware
 app.use((err, req, res, next) => {
     console.error("Server error:", err);
     res.status(500).render("error", {
@@ -110,7 +111,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-// 404 handler
 app.use((req, res) => {
     res.status(404).render("error", {
         message: "Page not found",

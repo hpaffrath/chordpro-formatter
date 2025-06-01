@@ -14,15 +14,12 @@ function extractMetadata(line) {
 function parseVerse(line, insideVerse, verseLabel, verseBuffer, parsedHtml) {
     if (line.startsWith("{start_of_verse}") || line.startsWith("{start_of_part}")) {
         insideVerse = true;
-        verseLabel = "Verse"; // Default label if no custom name is given
+        verseLabel = "Verse";
         verseBuffer = `<div class="verse-container"><div class="verse-label">${verseLabel}</div><div class="verse-content">`;
         return { insideVerse, verseLabel, verseBuffer, parsedHtml, output: "" };
     } else if (line.startsWith("{start_of_verse:") || line.startsWith("{start_of_part:")) {
         insideVerse = true;
-
-        // Extract label correctly
         verseLabel = line.match(/\{start_of_(?:verse|part):(.*?)\}/)?.[1]?.trim() || "Verse";
-
         verseBuffer = `<div class="verse-container"><div class="verse-label">${verseLabel}</div><div class="verse-content">`;
         return { insideVerse, verseLabel, verseBuffer, parsedHtml, output: "" };
     } else if (line.startsWith("{end_of_verse}") || line.startsWith("{end_of_part}")) {
@@ -103,14 +100,22 @@ function parseChordPro(text) {
     let tabBuffer = "";
 
     lines.forEach(line => {
-        // Process metadata first
+        if (line.trim() === "") {
+            if (insideChorus) {
+                chorusBuffer += "<div class='blank-line'>&nbsp;</div>"; // Preserve empty lines
+            } else if (insideVerse) {
+                verseBuffer += "<div class='blank-line'>&nbsp;</div>"; // Preserve empty lines
+            } else {
+                parsedHtml += "<div class='blank-line'>&nbsp;</div>"; // Ensure spacing is rendered
+            }
+            return;
+        }
         let extractedMetadata = extractMetadata(line);
         if (extractedMetadata) {
             metadata += extractedMetadata;
-            return; // Skip further processing
+            return;
         }
 
-        // Process blocks
         let verseData = parseVerse(line, insideVerse, verseLabel, verseBuffer, parsedHtml);
         insideVerse = verseData.insideVerse;
         verseLabel = verseData.verseLabel;
@@ -131,7 +136,6 @@ function parseChordPro(text) {
         parsedHtml = tabData.parsedHtml;
         if (tabData.output === "") return;
 
-        // Handle empty lines
         if (line.trim() === "") {
             if (insideChorus) {
                 chorusBuffer += "<br>";
@@ -143,10 +147,8 @@ function parseChordPro(text) {
             return;
         }
 
-        // Parse comments
         line = parseComment(line);
 
-        // Process chords and lyrics with proper alignment
         let chordLine = "";
         let lyricsLine = "";
         let inChord = false;
@@ -157,39 +159,31 @@ function parseChordPro(text) {
             if (line[i] === '[') {
                 inChord = true;
                 chordBuffer = "";
-                chordStartIndex = lyricsLine.length;  // Mark where the chord should start
+                chordStartIndex = lyricsLine.length;
                 continue;
             } else if (line[i] === ']' && inChord) {
                 inChord = false;
-                
-                // Place chord at the marked position
                 while (chordLine.length < chordStartIndex) {
                     chordLine += " ";
                 }
                 chordLine += chordBuffer;
-                
                 continue;
             }
-            
+
             if (inChord) {
                 chordBuffer += line[i];
             } else {
                 lyricsLine += line[i];
-                
-                // Add space to chord line if needed to maintain alignment
                 if (chordLine.length < lyricsLine.length) {
                     chordLine += " ";
                 }
             }
         }
 
-        // Pad chord line to match lyrics line length
         chordLine = chordLine.padEnd(lyricsLine.length, " ");
-
         chordLine = `<div class='chord-line'>${chordLine}</div>`;
         lyricsLine = `<div class='lyrics-line'>${lyricsLine}</div>`;
 
-        // Add to appropriate buffer
         if (insideChorus) {
             chorusBuffer += chordLine + lyricsLine;
         } else if (insideVerse) {
@@ -199,7 +193,6 @@ function parseChordPro(text) {
         }
     });
 
-    // Flush any remaining buffers
     if (insideVerse) {
         verseBuffer += `</div></div>`;
         parsedHtml += verseBuffer;
