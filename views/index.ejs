@@ -78,11 +78,6 @@
         <div class="editor">
             <div class="editor-header">
                 <h2><i class="fas fa-edit"></i> Input</h2>
-                <!--
-                <div class="examples">
-                    <button id="exampleButton">Load Example</button>
-                </div>
-                -->
             </div>
             <textarea id="chordProEditor" placeholder="Paste ChordPro text here..."></textarea>
             <div class="button-group">
@@ -120,44 +115,8 @@
             const metadataArea = document.getElementById("metadata");
             const songContent = document.getElementById("song-content");
 
-            /*
-            // Example ChordPro text
-            const exampleChordPro = `{title: Hotel California}
-{artist: Eagles}
-{key: Bm}
-
-{start_of_chorus}
-[Am]Welcome to the [E7]Hotel Cali[G]fornia
-[D]Such a lovely [F]place, [C]such a lovely [E7]face
-{end_of_chorus}
-
-{start_of_verse: Verse 1}
-[G]On a dark desert highway, [D]cool wind in my hair
-[Em]Warm smell of colitas, [F]rising up through the air
-{end_of_verse}
-
-{comment: Guitar Solo}
-{start_of_tab}
-e|-----0-----0-----0-----0-----|
-B|---1---1-----1-----1-----1---|
-G|-----2-----0-----0-----0-----|
-D|-----------------------------|
-A|-----------------------------|
-E|-----------------------------|
-{end_of_tab}`;
-*/
-
             // Set editor focus on load
             chordProEditor.focus();
-
-            /*
-            // Load example button handler
-            exampleButton.addEventListener("click", () => {
-                chordProEditor.value = exampleChordPro;
-                statusText.textContent = "Example loaded";
-                setTimeout(() => statusText.textContent = "Ready", 2000);
-            });
-            */
 
             // Clear button handler
             clearButton.addEventListener("click", () => {
