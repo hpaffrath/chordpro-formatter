@@ -73,7 +73,7 @@ button:hover {
 
 /* Title & Subtitle Styling */
 .title, .artist, .key, .subtitle {
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 700;
     text-align: center;
     margin: 0 !important; /* Ensures no extra spacing */
@@ -86,26 +86,26 @@ button:hover {
 }
 
 .subtitle {
-    font-size: 22px;
+    font-size: 20px;
     font-style: italic;
     color: #555;
 }
 
 .artist {
-    font-size: 22px;
+    font-size: 10px;
     color: #7a1a3d;
     font-weight: 500;
 }
 
 .key {
-    font-size: 18px;
+    font-size: 14px;
     color: #3d7a1a;
     font-weight: 500;
 }
 
 /* Chords & Lyrics */
 .chord-line {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
     color: #c53d1a;
     display: block;
@@ -117,7 +117,7 @@ button:hover {
 }
 
 .lyrics-line {
-    font-size: 18px;
+    font-size: 20px;
     display: block;
     white-space: pre;
     line-height: 1;
@@ -147,7 +147,7 @@ button:hover {
 
 .verse-label,
 .chorus-label {
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 700;
     color: #2c5282;
     text-transform: uppercase;
@@ -167,7 +167,7 @@ button:hover {
 
 /* Comments */
 .comment {
-    font-size: 16px;
+    font-size: 10px;
     font-style: italic;
     color: #2c8252;
     display: block;
@@ -214,7 +214,7 @@ button:hover {
     }
 
     .tab-section {
-        font-size: 11px;
+        font-size: 12px;
         padding: 10px;
 /*        overflow-x: scroll;
         -webkit-overflow-scrolling: touch;*/
