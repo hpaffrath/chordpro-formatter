@@ -16,29 +16,7 @@ const CACHE_EXPIRATION = 5 * 60 * 1000;
 
 app.get("/", (req, res) => {
     try {
-        const exampleChordPro = `{title: Hotel California}
-        {artist: Eagles}
-        {key: Bm}
-
-        {start_of_chorus}
-        [Am]Welcome to the [E7]Hotel Cali[G]fornia
-        [D]Such a lovely [F]place, [C]such a lovely [E7]face
-        {end_of_chorus}
-
-        {start_of_verse: Verse 1}
-        [G]On a dark desert highway, [D]cool wind in my hair
-        [Em]Warm smell of colitas, [F]rising up through the air
-        {end_of_verse}
-
-        {comment: Guitar Solo}
-        {start_of_tab}
-        e|-----0-----0-----0-----0-----|
-        B|---1---1-----1-----1-----1---|
-        G|-----2-----0-----0-----0-----|
-        D|-----------------------------|
-        A|-----------------------------|
-        E|-----------------------------|
-        {end_of_tab}`;
+        const exampleChordPro = ``;
 
         const formattedData = parseChordPro(exampleChordPro);
         

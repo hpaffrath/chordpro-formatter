@@ -10,12 +10,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .pdf-container {
-            width: 100%;
+            width: 90%;
             background: white;
             color: #333;
             font-family: 'Fira Code', monospace;
             padding: 20px;
             box-sizing: border-box;
+            margin-top: 20px !important;
+            margin-bottom: 20px !important;
+            margin-left: 20px !important;
         }
 
         @media print {
@@ -42,12 +45,6 @@
                 border-radius: 0 !important;
             }
 
-            .verse-container,
-            .chorus-container,
-            .tab-section {
-                page-break-inside: avoid;
-            }
-
             .title {
                 font-size: 28px !important;
                 margin-top: 10px !important;
@@ -57,6 +54,16 @@
             .key {
                 font-size: 20px !important;
             }
+
+            .verse-container,
+            .chorus-container,
+            .tab-section {
+                page-break-inside: avoid !important;
+                /* Prevents splitting */
+                break-inside: avoid-column !important;
+                /* Reinforces for browsers */
+                display: block !important;
+            }
         }
     </style>
 </head>
@@ -64,16 +71,18 @@
 <body>
     <header>
         <h1><i class="fas fa-music"></i> ChordPro Formatter</h1>
-        <p>Convert ChordPro notation to beautifully formatted sheet music</p>
+        <p>Convert ChordPro notation to formatted sheet music</p>
     </header>
 
     <div class="container">
         <div class="editor">
             <div class="editor-header">
                 <h2><i class="fas fa-edit"></i> Input</h2>
+                <!--
                 <div class="examples">
                     <button id="exampleButton">Load Example</button>
                 </div>
+                -->
             </div>
             <textarea id="chordProEditor" placeholder="Paste ChordPro text here..."></textarea>
             <div class="button-group">
@@ -104,13 +113,14 @@
             const renderButton = document.getElementById("renderButton");
             const printButton = document.getElementById("printButton");
             const clearButton = document.getElementById("clearButton");
-            const exampleButton = document.getElementById("exampleButton");
+            //const exampleButton = document.getElementById("exampleButton");
             const statusText = document.getElementById("statusText");
             const loadingSpinner = document.getElementById("loadingSpinner");
             const outputArea = document.getElementById("output");
             const metadataArea = document.getElementById("metadata");
             const songContent = document.getElementById("song-content");
 
+            /*
             // Example ChordPro text
             const exampleChordPro = `{title: Hotel California}
 {artist: Eagles}
@@ -135,16 +145,19 @@ D|-----------------------------|
 A|-----------------------------|
 E|-----------------------------|
 {end_of_tab}`;
+*/
 
             // Set editor focus on load
             chordProEditor.focus();
 
+            /*
             // Load example button handler
             exampleButton.addEventListener("click", () => {
                 chordProEditor.value = exampleChordPro;
                 statusText.textContent = "Example loaded";
                 setTimeout(() => statusText.textContent = "Ready", 2000);
             });
+            */
 
             // Clear button handler
             clearButton.addEventListener("click", () => {
@@ -220,7 +233,6 @@ E|-----------------------------|
 
                     statusText.textContent = "Exporting PDF...";
                     printButton.disabled = true;
-
                     const pdfContainer = document.createElement("div");
                     pdfContainer.className = "pdf-container";
                     pdfContainer.style.margin = "0";
@@ -230,9 +242,7 @@ E|-----------------------------|
                         statusText.textContent = "Error: Missing data for PDF";
                         return;
                     }
-
                     pdfContainer.innerHTML = metadataArea.innerHTML.trim() + outputArea.innerHTML.trim();
-                    document.body.appendChild(pdfContainer);
 
                     // Remove any extra empty lines before export
                     [...pdfContainer.children].forEach(child => {
@@ -242,16 +252,20 @@ E|-----------------------------|
                     });
 
                     document.body.appendChild(pdfContainer);
-
+                    window.scrollTo(0, 0);
                     html2pdf()
                         .set({
-                            margin: [0, 0, 0, 0], // Remove all margins
+                            //margin: 10,
                             filename: filename,
-                            html2canvas: { scale: 2, logging: true },
-                            jsPDF: { format: "a4", orientation: "portrait" }
+                            image: { type: "jpeg", quality: 0.98 },
+                            html2canvas: { scale: 2 },
+                            jsPDF: {
+                                unit: "mm", format: "a4",
+                                orientation: "portrait"
+                            }
                         })
                         .from(pdfContainer)
-                        .to()
+                        .to('pdf')
                         .save()
                         .then(() => {
                             console.log("Debug: PDF export successful");

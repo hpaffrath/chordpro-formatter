@@ -56,7 +56,7 @@ function parseChorus(line, insideChorus, chorusLabel, chorusBuffer, parsedHtml) 
 function parseTab(line, insideTab, tabBuffer, parsedHtml) {
     if (line.startsWith("{start_of_tab}")) {
         insideTab = true;
-        tabBuffer = `<div class="verse-container"><div></div><div class="tab-section">`;
+        tabBuffer = `<div class="verse-container"><div class="tab-section">`;
         return { insideTab, tabBuffer, parsedHtml, output: "" };
     } else if (line.startsWith("{end_of_tab}")) {
         insideTab = false;
