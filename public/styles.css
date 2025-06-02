@@ -3,7 +3,8 @@
 body {
     font-family: 'Fira Code', monospace;
     line-height: 1;
-    margin: 0; /* Removes unwanted space */
+    margin: 0;
+    /* Removes unwanted space */
     padding: 0;
     background-color: #f8f9fa;
     color: #333;
@@ -72,11 +73,15 @@ button:hover {
 }
 
 /* Title & Subtitle Styling */
-.title, .artist, .key, .subtitle {
+.title,
+.artist,
+.key,
+.subtitle {
     font-size: 24px;
     font-weight: 700;
     text-align: center;
-    margin: 0 !important; /* Ensures no extra spacing */
+    margin: 0 !important;
+    /* Ensures no extra spacing */
     padding: 0 !important;
     display: block;
 }
@@ -167,7 +172,7 @@ button:hover {
 
 /* Comments */
 .comment {
-    font-size: 10px;
+    font-size: 15px;
     font-style: italic;
     color: #2c8252;
     display: block;
@@ -199,7 +204,8 @@ button:hover {
     white-space: pre;
     font-size: 12px;
     letter-spacing: 0px;
-    width: max-content !important; /* Makes each line extend fully */
+    width: max-content !important;
+    /* Makes each line extend fully */
 }
 
 /* Responsive adjustments */
@@ -216,13 +222,14 @@ button:hover {
     .tab-section {
         font-size: 12px;
         padding: 10px;
-/*        overflow-x: scroll;
+        /*        overflow-x: scroll;
         -webkit-overflow-scrolling: touch;*/
     }
 }
 
 /* Print Fixes */
 @media print {
+
     body,
     .output-area {
         margin: 0 !important;
@@ -247,6 +254,7 @@ button:hover {
         margin: 5 !important;
         box-shadow: none !important;
         border-radius: 0 !important;
+
     }
 
     .verse-container,
@@ -255,21 +263,26 @@ button:hover {
         page-break-inside: avoid !important;
         display: block !important;
         overflow: visible !important;
+        /* Prevents splitting */
+        break-inside: avoid-column !important;
     }
 }
 
 
 .blank-line {
     display: block;
-    height: 20px; /* Adjust spacing */
+    height: 20px;
+    /* Adjust spacing */
     width: 100%;
 }
 
-.tab-section, .tab-line {
+.tab-section,
+.tab-line {
     width: 100% !important;
     overflow-wrap: break-word;
 }
 
-.chord-line, .lyrics-line {
+.chord-line,
+.lyrics-line {
     white-space: pre-wrap !important;
 }
